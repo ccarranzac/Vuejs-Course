@@ -4,8 +4,15 @@
             <h1>Mi Firends</h1>
         </header>
         <ul>
-            <friend-contact></friend-contact>
-            <friend-contact></friend-contact>
+            <friend-contact
+              v-for="friend in friends" 
+              :key="friend.id"
+              :name="friend.name"
+              :phone-number="friend.phone"
+              :email-address="friend.email"
+              :isFavorite="friend.favorite"
+            >
+            </friend-contact>
         </ul>
     </section>
 </template>
@@ -21,13 +28,15 @@ export default{
                     id: 'manuel',
                     name: 'Manuel',
                     phone: '42424',
-                    email:'manuel@email.com'
+                    email:'manuel@email.com',
+                    favorite: true
                 },
                 {
                     id: 'julie',
                     name: 'Julie',
                     phone: '42454',
-                    email:'julie@email.com'
+                    email:'julie@email.com',
+                    favorite: false
                 }
             ]
         }

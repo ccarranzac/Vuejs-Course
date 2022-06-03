@@ -3,7 +3,7 @@
         <base-card>
             <header>
                 <h3>{{ resource.title }}</h3>
-                <base-button mode="flat">Delete</base-button>
+                <base-button mode="flat" @click="removeResource(resource.id)">Delete</base-button>
             </header>
             <p>{{ resource.description }}</p>
             <nav>
@@ -17,13 +17,9 @@
 import BaseButton from '../UI/BaseButton.vue'
 export default {
   components: { BaseButton },
+  inject:['removeResource'],
     props:{
         resource:{ type: Object, required: true }
-    },
-    data(){
-        return{
-
-        }
     }
 }
 </script>

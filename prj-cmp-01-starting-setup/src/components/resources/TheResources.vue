@@ -50,7 +50,8 @@ export default {
     provide(){
         return{
             resources: this.storedResources,
-            addResource: this.addResource
+            addResource: this.addResource,
+            removeResource: this.removeResource
         }
     },
     methods:{
@@ -62,7 +63,8 @@ export default {
             }
             this.storedResources.unshift(newResource)
             this.tab = 'stored-resources'
-        }
+        },
+        removeResource(id){ this.storedResources.splice(id,1) }
     }
 }
 </script>

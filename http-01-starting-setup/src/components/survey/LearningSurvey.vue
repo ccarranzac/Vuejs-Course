@@ -63,7 +63,12 @@ export default {
         rating: this.chosenRating
       })
       .then(res =>{
-        console.log(res);
+        if(res.statusText === 'OK'){
+          //...
+        }
+        else{
+          throw new Error('Could not save data!')
+        }
       })
       .catch(err =>{
         this.error=`${err.message}- Please try it latter!` 

@@ -4,15 +4,29 @@
     <button @click="animateBlock">Animate</button>
   </div>
   <div class="container">
-    <transition>
+    <transition 
+      name="para" 
+      @enter="enter" 
+      @after-enter="afterEnter" 
+      @before-enter="beforeEnter" 
+      @before-leave="beforeLeave"
+      @leave="leave"
+      @after-leave="afterLeave"
+    >
       <p v-if="textIsVisible">This is sometimes visible...</p>
     </transition>
     <button @click="toggleText">Toggle Paragraph</button>
   </div>
-  <base-modal @close="hideDialog" v-if="dialogIsVisible">
-    <p>This is a test dialog!</p>
-    <button @click="hideDialog">Close it!</button>
-  </base-modal>
+    <div class="container">
+      <transition name="fade-button" mode="out-in">
+        <button @click="showUsers" v-if="!usersVisible">Show Users</button>
+        <button @click="hideUsers" v-else>Hide Users</button>
+      </transition>
+    </div>
+    <base-modal @close="hideDialog" :open="dialogIsVisible">
+      <p>This is a test dialog!</p>
+      <button @click="hideDialog">Close it!</button>
+    </base-modal>
   <div class="container">
     <button @click="showDialog">Show Dialog</button>
   </div>
@@ -25,9 +39,28 @@ export default {
       dialogIsVisible: false,
       animatedBlock: false,
       textIsVisible: false,
+      usersVisible: false
     };
   },
   methods: {
+    beforeEnter(el){
+      console.log("before enter",el);
+    },
+    beforeLeave(el){
+      console.log("before leave",el);
+    },
+    enter(el){
+      console.log("enter",el);
+    },
+    afterEnter(el){
+      console.log("after enter", el);
+    },
+    leave(el){
+      console.log("leave", el);
+    },
+    afterLeaver(el){
+      console.log("after leave", el);
+    },
     animateBlock() {
       this.animatedBlock = true;
     },
@@ -40,6 +73,8 @@ export default {
     hideDialog() {
       this.dialogIsVisible = false;
     },
+    showUsers(){ this.usersVisible= true },
+    hideUsers(){ this.usersVisible= false }
   },
 };
 </script>
@@ -92,35 +127,53 @@ button:active {
   animation: slide-fade 0.5s ease-out forwards;
 }
 
-/* .v-enter-from {
-  opacity: 0;
-  transform: translateY(-30px);
-} */
+.para-enter-from {
+  /* opacity: 0;
+  transform: translateY(-30px); */
+} 
 
-.v-enter-active {
+.para-enter-active {
   /* transition: all 0.5s ease-out; */
   animation: slide-fade 0.5s ease-out;
 }
 
-/* .v-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-} */
+.para-enter-to {
+  /* opacity: 1;
+  transform: translateY(0); */
+}
 
-/* .v-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-} */
+.para-leave-from {
+  /* opacity: 1;
+  transform: translateY(0); */
+}
 
-.v-leave-active {
+.para-leave-active {
   /* transition: all 0.5s ease-in; */
   animation: slide-fade 0.5s ease-out;
 }
 
-/* .v-leave-to {
+.para-leave-to {
+  /* opacity: 0;
+  transform: translateY(-30px); */
+}
+.fade-button-leave-to,
+.fade-button-enter-from {
   opacity: 0;
-  transform: translateY(-30px);
-} */
+}
+
+
+.fade-button-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+
+.fade-button-leave-active {
+  transition: opacity 0.3s ease-in;
+}
+
+.fade-button-leave-from,
+.fade-button-enter-to {
+  opacity: 1;
+}
 
 @keyframes slide-fade {
   0% {

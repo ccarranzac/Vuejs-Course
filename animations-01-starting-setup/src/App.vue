@@ -1,47 +1,13 @@
 <template>
-  <div class="container">
-    <list-data></list-data>
-  </div>
-  <div class="container">
-    <div class="block" :class="{ animate: animatedBlock }"></div>
-    <button @click="animateBlock">Animate</button>
-  </div>
-  <div class="container">
-    <transition
-      :css="false"
-      @enter="enter"
-      @after-enter="afterEnter"
-      @before-enter="beforeEnter"
-      @before-leave="beforeLeave"
-      @leave="leave"
-      @after-leave="afterLeave"
-      @enter-cancelled="enterCancelled"
-      @leave-cancelled="leaveCancelled"
-    >
-      <p v-if="textIsVisible">This is sometimes visible...</p>
-    </transition>
-    <button @click="toggleText">Toggle Paragraph</button>
-  </div>
-  <div class="container">
+  <router-view v-slot="slotProps">
     <transition name="fade-button" mode="out-in">
-      <button @click="showUsers" v-if="!usersVisible">Show Users</button>
-      <button @click="hideUsers" v-else>Hide Users</button>
+      <component :is="slotProps.Component"></component>
     </transition>
-  </div>
-  <base-modal @close="hideDialog" :open="dialogIsVisible">
-    <p>This is a test dialog!</p>
-    <button @click="hideDialog">Close it!</button>
-  </base-modal>
-  <div class="container">
-    <button @click="showDialog">Show Dialog</button>
-  </div>
+  </router-view>
 </template>
 
 <script>
-import ListData from './components/ListData.vue';
-
 export default {
-  components: { ListData },
   data() {
     return {
       dialogIsVisible: false,
@@ -152,9 +118,29 @@ button:active {
   border-radius: 12px;
 }
 
-.animate {
-  /* transform: translateX(-100px); */
-  animation: slide-fade 0.5s ease-out forwards;
+.route-enter-from {
+}
+.route-enter-active {
+  animation: slide-scale 1s ease-out;
+}
+.route-enter-to {
+}
+
+route-leave-active {
+  animation: slide-scale 1s ease-in;
+}
+
+@keyframes slide-fade {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  70% {
+    transform: translateX(-120px) scale(1.1);
+  }
+
+  100% {
+    transform: translateX(-150px) scale(1);
+  }
 }
 
 .fade-button-leave-to,
@@ -173,18 +159,5 @@ button:active {
 .fade-button-leave-from,
 .fade-button-enter-to {
   opacity: 1;
-}
-
-@keyframes slide-fade {
-  0% {
-    transform: translateX(0) scale(1);
-  }
-  70% {
-    transform: translateX(-120px) scale(1.1);
-  }
-
-  100% {
-    transform: translateX(-150px) scale(1);
-  }
 }
 </style>

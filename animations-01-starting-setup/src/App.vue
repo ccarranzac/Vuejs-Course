@@ -1,65 +1,91 @@
 <template>
   <div class="container">
+    <list-data></list-data>
+  </div>
+  <div class="container">
     <div class="block" :class="{ animate: animatedBlock }"></div>
     <button @click="animateBlock">Animate</button>
   </div>
   <div class="container">
-    <transition 
-      name="para" 
-      @enter="enter" 
-      @after-enter="afterEnter" 
-      @before-enter="beforeEnter" 
+    <transition
+      :css="false"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @before-enter="beforeEnter"
       @before-leave="beforeLeave"
       @leave="leave"
       @after-leave="afterLeave"
+      @enter-cancelled="enterCancelled"
+      @leave-cancelled="leaveCancelled"
     >
       <p v-if="textIsVisible">This is sometimes visible...</p>
     </transition>
     <button @click="toggleText">Toggle Paragraph</button>
   </div>
-    <div class="container">
-      <transition name="fade-button" mode="out-in">
-        <button @click="showUsers" v-if="!usersVisible">Show Users</button>
-        <button @click="hideUsers" v-else>Hide Users</button>
-      </transition>
-    </div>
-    <base-modal @close="hideDialog" :open="dialogIsVisible">
-      <p>This is a test dialog!</p>
-      <button @click="hideDialog">Close it!</button>
-    </base-modal>
+  <div class="container">
+    <transition name="fade-button" mode="out-in">
+      <button @click="showUsers" v-if="!usersVisible">Show Users</button>
+      <button @click="hideUsers" v-else>Hide Users</button>
+    </transition>
+  </div>
+  <base-modal @close="hideDialog" :open="dialogIsVisible">
+    <p>This is a test dialog!</p>
+    <button @click="hideDialog">Close it!</button>
+  </base-modal>
   <div class="container">
     <button @click="showDialog">Show Dialog</button>
   </div>
 </template>
 
 <script>
+import ListData from './components/ListData.vue';
+
 export default {
+  components: { ListData },
   data() {
     return {
       dialogIsVisible: false,
       animatedBlock: false,
       textIsVisible: false,
-      usersVisible: false
+      usersVisible: false,
     };
   },
   methods: {
-    beforeEnter(el){
-      console.log("before enter",el);
+    beforeEnter(el) {
+      console.log('before enter', el);
+      el.style.opacity = 0;
     },
-    beforeLeave(el){
-      console.log("before leave",el);
+    beforeLeave(el) {
+      console.log('before leave', el);
+      el.style.opacity = 1;
     },
-    enter(el){
-      console.log("enter",el);
+    enter(el, done) {
+      console.log('enter', el);
+      let round = 0;
+      const interval = setInterval(function () {
+        el.style.opacity = round * 0.1;
+        round++;
+        if (round > 100) {
+          clearInterval(interval);
+          done();
+        }
+      }, 20);
     },
-    afterEnter(el){
-      console.log("after enter", el);
+    afterEnter(el) {
+      console.log('after enter', el);
     },
-    leave(el){
-      console.log("leave", el);
+    leave(el) {
+      console.log('leave', el);
+      el.style.opacity = 0;
     },
-    afterLeaver(el){
-      console.log("after leave", el);
+    afterLeave(el) {
+      console.log('after leave', el);
+    },
+    enterCancelled(el) {
+      console.log('enter cancelled', el);
+    },
+    leaveCancelled(el) {
+      console.log('leave cancelled', el);
     },
     animateBlock() {
       this.animatedBlock = true;
@@ -73,8 +99,12 @@ export default {
     hideDialog() {
       this.dialogIsVisible = false;
     },
-    showUsers(){ this.usersVisible= true },
-    hideUsers(){ this.usersVisible= false }
+    showUsers() {
+      this.usersVisible = true;
+    },
+    hideUsers() {
+      this.usersVisible = false;
+    },
   },
 };
 </script>
@@ -127,40 +157,10 @@ button:active {
   animation: slide-fade 0.5s ease-out forwards;
 }
 
-.para-enter-from {
-  /* opacity: 0;
-  transform: translateY(-30px); */
-} 
-
-.para-enter-active {
-  /* transition: all 0.5s ease-out; */
-  animation: slide-fade 0.5s ease-out;
-}
-
-.para-enter-to {
-  /* opacity: 1;
-  transform: translateY(0); */
-}
-
-.para-leave-from {
-  /* opacity: 1;
-  transform: translateY(0); */
-}
-
-.para-leave-active {
-  /* transition: all 0.5s ease-in; */
-  animation: slide-fade 0.5s ease-out;
-}
-
-.para-leave-to {
-  /* opacity: 0;
-  transform: translateY(-30px); */
-}
 .fade-button-leave-to,
 .fade-button-enter-from {
   opacity: 0;
 }
-
 
 .fade-button-enter-active {
   transition: opacity 0.3s ease-out;

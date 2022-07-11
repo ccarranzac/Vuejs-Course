@@ -31,6 +31,17 @@ const store = createStore({
       return getters.finalCounter;
     },
   },
+  actions: {
+    increment(context) {
+      setTimeout(function () {
+        context.commit('increment');
+      }, 2000);
+    },
+    increase(context, payload) {
+      console.log(context);
+      context.commit('increase', payload);
+    },
+  },
 });
 
 const app = createApp(App);

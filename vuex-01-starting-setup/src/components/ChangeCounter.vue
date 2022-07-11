@@ -15,8 +15,8 @@ export default {
     //     value: 10,
     //   });
     // },
-    //...mapActions(['increment', 'increase']),
-    ...mapActions({
+    //...mapActions(['increment', 'increase']),'numbers',
+    ...mapActions('numbers', {
       inc: 'increment',
       increase: 'increase',
     }),

@@ -6,6 +6,6 @@ export default {
     return state.total;
   },
   getQuantity(state) {
-    state.quantity;
+    return state.qty;
   },
 };
